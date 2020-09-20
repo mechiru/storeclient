@@ -12,7 +12,7 @@ Use itunes api to get the information.
 ```go
 import "github.com/mechiru/storeclient/appstore"
 
-c := appstore.NewClient(Lang("ja_jp"), Country("JP"))
+c := appstore.NewClient(appstore.Lang("ja_jp"), appstore.Country("JP"))
 resp, err := c.Lookup(context.Background(), appstore.StoreID(340368403))
 if err != nil {
 	// TODO: handle error
@@ -26,7 +26,7 @@ Scraping the app details page to get the information.
 ```go
 import "github.com/mechiru/storeclient/playstore"
 
-c := NewClient(Lang("ja"))
+c := playstore.NewClient(playstore.Lang("ja"))
 resp, err := c.Get(context.Background(), "com.cookpad.android.activities")
 if err != nil {
 	// TODO: handle error
