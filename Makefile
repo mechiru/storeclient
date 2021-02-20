@@ -1,5 +1,13 @@
 ALL_GO_MOD_DIRS := $(shell find . -mindepth 2 -type f -name 'go.mod' -exec dirname {} \; | sort)
 
+.PHONY: tidy
+tidy:
+	@set -e; \
+	for dir in $(ALL_GO_MOD_DIRS); do \
+		echo "go mod tidy in $${dir}"; \
+		(cd "$${dir}" && go mod tidy -v); \
+	done;
+
 .PHONY: build
 build:
 	@set -e; \
