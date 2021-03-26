@@ -2,7 +2,6 @@ package playstore
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -54,7 +53,7 @@ func (c *Client) defaultParams() url.Values {
 	return vs
 }
 
-var errEmptyBundleID = errors.New("playstore: bundle id is empty")
+var errEmptyBundleID = &Error{message: "bundle id is empty"}
 
 func (c *Client) getURL(bundleID string) (*url.URL, error) {
 	if bundleID == "" {
@@ -85,7 +84,7 @@ func (c *Client) Get(ctx context.Context, bundleID string) (*Detail, error) {
 
 	if resp.StatusCode < 200 || 300 < resp.StatusCode {
 		io.Copy(ioutil.Discard, resp.Body)
-		return nil, fmt.Errorf("appstore: response status code error: %d", resp.StatusCode)
+		return nil, &Error{resp.StatusCode, "response status code error"}
 	}
 
 	return parseHTML(resp.Body)
@@ -164,3 +163,12 @@ func parseHTML(r io.Reader) (d *Detail, err error) {
 
 	return ret, nil
 }
+
+type Error struct {
+	code    int
+	message string
+}
+
+func (e *Error) Code() int { return e.code }
+
+func (e *Error) Error() string { return fmt.Sprintf("playstore: %s", e.message) }

@@ -107,7 +107,7 @@ func (c *Client) Lookup(ctx context.Context, k LookupKey) (*LookupResponse, erro
 
 	if resp.StatusCode < 200 || 300 < resp.StatusCode {
 		io.Copy(ioutil.Discard, resp.Body)
-		return nil, fmt.Errorf("appstore: response status code error: %d", resp.StatusCode)
+		return nil, &Error{resp.StatusCode, "response status code error"}
 	}
 
 	var ret LookupResponse
@@ -189,3 +189,12 @@ type LookupResult struct {
 	WrapperType                        string    `json:"wrapperType"`
 	UserRatingCount                    int       `json:"userRatingCount"`
 }
+
+type Error struct {
+	code    int
+	message string
+}
+
+func (e *Error) Code() int { return e.code }
+
+func (e *Error) Error() string { return fmt.Sprintf("appstore: %s", e.message) }
