@@ -13,7 +13,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-var endpoint = "https://play.google.com/store/apps/details"
+const endpoint = "https://play.google.com/store/apps/details"
 
 type Client struct {
 	c    *http.Client

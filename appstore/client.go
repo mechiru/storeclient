@@ -18,7 +18,7 @@ import (
 	"time"
 )
 
-var endpoint = "https://itunes.apple.com"
+const endpoint = "https://itunes.apple.com"
 
 type Client struct {
 	c             *http.Client
