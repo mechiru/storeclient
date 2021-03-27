@@ -3,7 +3,9 @@ package playstore
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io/ioutil"
+	"log"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -107,4 +109,15 @@ func TestParseHTML(t *testing.T) {
 	if !cmp.Equal(got, want) {
 		t.Errorf(cmp.Diff(got, want))
 	}
+}
+
+func ExampleClient() {
+	c := NewClient(Lang("ja"))
+	resp, err := c.Get(context.Background(), "com.cookpad.android.activities")
+	if err != nil {
+		log.Fatal(err)
+	}
+	// Output:
+	// com.cookpad.android.activities
+	fmt.Printf("%s\n", resp.StoreID)
 }

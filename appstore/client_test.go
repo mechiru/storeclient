@@ -3,7 +3,9 @@ package appstore
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
+	"log"
 	"testing"
 )
 
@@ -59,4 +61,15 @@ func TsetLookup(t *testing.T) {
 	if _, err := c.Lookup(context.Background(), StoreID(340368403)); err != nil {
 		t.Error(err)
 	}
+}
+
+func ExampleClient() {
+	c := NewClient(Lang("ja_jp"), Country("jp"))
+	resp, err := c.Lookup(context.Background(), StoreID(340368403))
+	if err != nil {
+		log.Fatal(err)
+	}
+	// Output:
+	// com.cookpad
+	fmt.Printf("%s\n", resp.Results[0].BundleID)
 }
