@@ -33,7 +33,7 @@ type httpClient struct{ c *http.Client }
 
 func (hc httpClient) apply(c *Client) { c.c = hc.c }
 
-func HttpClient(c *http.Client) Option { return &httpClient{c: c} }
+func HTTPClient(c *http.Client) Option { return &httpClient{c: c} }
 
 // Language
 
