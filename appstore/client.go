@@ -105,7 +105,7 @@ func (c *Client) Lookup(ctx context.Context, k LookupKey) (*LookupResponse, erro
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode < 200 || 300 < resp.StatusCode {
+	if resp.StatusCode < 200 || 300 <= resp.StatusCode {
 		io.Copy(ioutil.Discard, resp.Body)
 		return nil, &Error{resp.StatusCode, "response status code error"}
 	}
