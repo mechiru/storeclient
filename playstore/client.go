@@ -121,7 +121,7 @@ func parseHTML(r io.Reader) (d *Detail, err error) {
 	title := doc.Find("head > title").First().Text()
 	ret.Title = title[:strings.LastIndex(title, "-")-1]
 
-	doc.Find("head > meta").Each(func(i int, s *goquery.Selection) {
+	doc.Find("head > meta").Each(func(_ int, s *goquery.Selection) {
 		attr, ok := s.Attr("name")
 		if !ok {
 			return
