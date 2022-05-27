@@ -1,25 +1,30 @@
-ALL_GO_MOD_DIRS := $(shell find . -mindepth 2 -type f -name 'go.mod' -exec dirname {} \; | sort)
+SHELL := /bin/bash
+
+CURR_DIR := $(shell pwd)
+MODULES := $(shell go work edit -json .go.work | jq ".Use[].DiskPath")
+GO_VERSION := 1.17
 
 .PHONY: tidy
 tidy:
-	@set -e; \
-	for dir in $(ALL_GO_MOD_DIRS); do \
-		echo "go mod tidy in $${dir}"; \
-		(cd "$${dir}" && go mod tidy -v); \
-	done;
+	@for dir in $(MODULES); do \
+		cd "$(CURR_DIR)/$$dir" \
+		&& mod=$$(go mod edit -json | jq -r .Module.Path) \
+		&& rm -f go.{mod,sum} \
+		&& go mod init $$mod \
+		&& go mod edit -go $(GO_VERSION) \
+		&& go mod tidy; \
+	done
 
 .PHONY: build
 build:
-	@set -e; \
-	for dir in $(ALL_GO_MOD_DIRS); do \
-		echo "go build in $${dir}"; \
-		(cd "$${dir}" && go build -v); \
-	done;
+	@for dir in $(MODULES); do \
+		if [ $$dir = "." ]; then continue; fi; \
+		cd "$(CURR_DIR)/$$dir" && echo "build $$(pwd)..." && go build -v ./...; \
+	done
 
 .PHONY: test
 test:
-	@set -e; \
-	for dir in $(ALL_GO_MOD_DIRS); do \
-		echo "go test ./... in $${dir}"; \
-		(cd "$${dir}" && go test -v ./...); \
-	done;
+	@for dir in $(MODULES); do \
+		if [ $$dir = "." ]; then continue; fi; \
+		cd "$(CURR_DIR)/$$dir" && echo "test $$(pwd)..." && go test -v ./...; \
+	done
