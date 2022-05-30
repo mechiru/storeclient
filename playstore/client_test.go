@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"strings"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -108,6 +109,42 @@ func TestParseHTML(t *testing.T) {
 
 	if !cmp.Equal(got, want) {
 		t.Errorf(cmp.Diff(got, want))
+	}
+}
+
+func TestParseHTML2(t *testing.T) {
+	for i, c := range []struct {
+		in, want string
+	}{
+		{`<head>
+<title id="main-title"></title>
+</head>`, ""},
+		{
+			`<head>
+<title id="main-title">x - something app</title>
+</head>`,
+			"x",
+		},
+		{
+			`<head>
+<title id="main-title">empty</title>
+</head>`,
+			"empty",
+		},
+		{
+			`<head>
+<title>empty</title>
+</head>`,
+			"",
+		},
+	} {
+		got, err := parseHTML(strings.NewReader(c.in))
+		if err != nil {
+			t.Error(err)
+		}
+		if got.Title != c.want {
+			t.Errorf("idx = %d: %s", i, cmp.Diff(got.Title, c.want))
+		}
 	}
 }
 
