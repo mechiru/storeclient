@@ -1,3 +1,3 @@
 module github.com/mechiru/storeclient
 
-go 1.17
+go 1.19
