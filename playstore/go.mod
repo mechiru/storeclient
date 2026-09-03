@@ -1,10 +1,10 @@
 module github.com/mechiru/storeclient/playstore
 
-go 1.17
+go 1.21
 
 require (
 	github.com/PuerkitoBio/goquery v1.8.0
-	github.com/google/go-cmp v0.5.8
+	github.com/google/go-cmp v0.7.0
 )
 
 require (
